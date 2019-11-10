@@ -17,8 +17,21 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        parseJSON(from: "https://andrew11us.github.io/data.json")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        _ = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { _ in
+            self.label.text = self.users[0].title
+        }
+    }
+    
+    func parseJSON(from: String) {
+        
         // Getting JSON page URL
-        guard let url = URL(string: "https://andrew11us.github.io/data.json") else { return }
+        guard let url = URL(string: from) else { return }
         
         // Setting up URLSessioin
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -34,31 +47,25 @@ class ViewController: UIViewController {
                 guard let jsonArray = jsonResponse as? [[String: Any]] else {
                     return
                 }
-                // Trying to acquire data from first element of an array for a key "title"
-                guard let title = jsonArray[0]["title"] as? String else { return }
-                print(title)
                 
-                // Using User struct to structurize the response
+                // MARK: add code to acquire data from JSON array
+                print(jsonArray)
                 for item in jsonArray {
                     self.users.append(User(item))
                 }
+                // parse users using compactMap
+                self.users = jsonArray.compactMap{ (dictionary)  in
+                    return User(dictionary)
+                }
+                
                 
             } catch let parsingError {
-                print("Error", parsingError)
+                print("Error: ", parsingError)
             }
         }
         task.resume()
-        
-        
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        _ = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { _ in
-            self.label.text = self.users[0].title
-        }
-    }
     
     
 }

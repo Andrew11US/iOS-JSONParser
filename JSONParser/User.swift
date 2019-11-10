@@ -22,3 +22,5 @@ struct User: Codable {
         self.completed = dictionary["completed"] as? Bool ?? false
     }
 }
+
+
