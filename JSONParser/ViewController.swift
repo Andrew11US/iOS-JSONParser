@@ -18,6 +18,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         parseJSON(from: "https://andrew11us.github.io/data.json")
+        
+        let e = encodeJSON()
+        decodeJSON(jsonData: e!)
     }
     
     override func viewDidAppear(_ animated: Bool) {
