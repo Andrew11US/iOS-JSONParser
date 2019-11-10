@@ -10,6 +10,10 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var label: UILabel!
+    
+    var users = [User]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,6 +38,11 @@ class ViewController: UIViewController {
                 guard let title = jsonArray[0]["title"] as? String else { return }
                 print(title)
                 
+                // Using User struct to structurize the response
+                for item in jsonArray {
+                    self.users.append(User(item))
+                }
+                
             } catch let parsingError {
                 print("Error", parsingError)
             }
@@ -41,6 +50,14 @@ class ViewController: UIViewController {
         task.resume()
         
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        _ = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { _ in
+            self.label.text = self.users[0].title
+        }
     }
     
     
