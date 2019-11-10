@@ -9,38 +9,40 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard let url = URL(string: "https://jsonplaceholder.typicode.com/todos") else { return }
+        // Getting JSON page URL
+        guard let url = URL(string: "https://andrew11us.github.io/data.json") else { return }
+        
+        // Setting up URLSessioin
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        guard let dataResponse = data, error == nil else {
-                  print(error?.localizedDescription ?? "Response Error")
-                  return }
+            // Checking if dataResponse in not empty
+            guard let dataResponse = data, error == nil else {
+                print(error?.localizedDescription ?? "Response Error")
+                return }
             do {
-                //here dataResponse received from a network request
+                // Try JSONSerializatioin to get JSON object
                 let jsonResponse = try JSONSerialization.jsonObject(with:
-                                       dataResponse, options: [])
-//                print(jsonResponse)
-                
+                    dataResponse, options: [])
+                // Downcasting JSON to [String:Any] array
                 guard let jsonArray = jsonResponse as? [[String: Any]] else {
-                      return
+                    return
                 }
-//                print(jsonArray)
-                
+                // Trying to acquire data from first element of an array for a key "title"
                 guard let title = jsonArray[0]["title"] as? String else { return }
-                print(title) 
+                print(title)
                 
-             } catch let parsingError {
+            } catch let parsingError {
                 print("Error", parsingError)
-           }
+            }
         }
         task.resume()
         
-
+        
     }
-
-
+    
+    
 }
 
